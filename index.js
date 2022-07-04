@@ -5,6 +5,11 @@ const app = express();
 const db = require('./Components/Database/db');
 const userModel = require('./Components/Models/User');
 
+const cors = require('cors');
+
+app.use(cors({
+    origin: '*'
+}));
 
 
 const PORT = process.env.PORT || 8080
@@ -30,14 +35,14 @@ app.post('/api/checkuser', (req,res) => {
 })
 
 app.post('/api/register', (req,res) => {
-    const { username, password, mail, cuit, } = req.body
+    const { name, password, mail, cuit, } = req.body
     
     const user = {
-        username,
+        name,
         password,
         mail,
         cuit,
-        role: 'user'
+        role: 'AdminUser'
     }
 
     db.then(db => {
@@ -47,6 +52,17 @@ app.post('/api/register', (req,res) => {
         })
     }).catch(err => console.log(err))
 
+})
+
+app.post('/api/login', (req,res) => {
+    const { mail, password } = req.body
+    db.then(db => {
+        userModel.findOne({mail: mail, password: password}, (err,user) => {
+            if(err) return res.send(err)
+            if(!user) return res.send('user not found')
+            return res.send(user)
+        })
+    }).catch(err => console.log(err))
 })
 
 
@@ -62,17 +78,5 @@ const server = app.listen(PORT, () => {
 
 ///Funciones
 
-function CreateToken (user) {
-    const payload = {
-        subject: user._id,
-        username: user.username,
-        role: user.role
-    }
 
-    const options = {
-        expiresIn: '1h'
-    }
-
-    return jwt.sign(payload, secret, options)
-}
 

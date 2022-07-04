@@ -1,10 +1,13 @@
+import { useContext } from "react";
+import { contexto } from "../Context/Context";
 
 
+export default function Welcome() {
+    const {loged, setLoged, user, setUser} = useContext(contexto);
 
-export default function Landing() {
     return (
         <>
-        
+        {user}
         </>
     );
 }

@@ -1,12 +1,17 @@
 import { Navbar, NavDropdown, Nav, Container } from 'react-bootstrap';
-
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { contexto } from '../Context/Context';
+import { useContext } from 'react';
+import './NavBar.css';
 
 
 export default function NavBar() { 
+  const {loged, setLoged} = useContext(contexto);
     return (
         <Navbar bg="light" expand="lg">
   <Container>
-    <Navbar.Brand href="#home">Cantilever</Navbar.Brand>
+    <Navbar.Brand><Link to='/' className='LogoPrincipal'>Cantilever</Link></Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="me-auto">
@@ -46,7 +51,15 @@ export default function NavBar() {
 
     <Navbar.Collapse className="justify-content-end">
       <Navbar.Text>
-        <Nav.Link href="#login">Login</Nav.Link>
+        <Nav.Link onClick={() => {
+          setLoged(false)
+          Swal.fire({
+            title: "Cerrando sesion",
+            text: "Puede ingresar de nuevo",
+            icon: "success",
+            confirmButtonText: "Ok",
+          })
+        }}>LogOut</Nav.Link>
       </Navbar.Text>
       <Nav.Link href="#home">Soporte</Nav.Link>
     </Navbar.Collapse>
