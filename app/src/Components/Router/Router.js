@@ -6,6 +6,7 @@ import { contexto } from "../Context/Context";
 import { useEffect } from "react";
 import Register from "../Register/Register";
 import Welcome from "../Landing/Landing";
+import Productos from "../Facturador/Productos/Productos";
 
 
 
@@ -27,6 +28,7 @@ export default function Router() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Welcome />} />
+          <Route path="/productos" element={<Productos />} />
           
         </Routes>
       </BrowserRouter>

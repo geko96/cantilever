@@ -4,6 +4,7 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
+    background-color: black;
   }
   
   .Auth-form {
@@ -12,7 +13,7 @@
     padding-top: 30px;
     padding-bottom: 20px;
     border-radius: 8px;
-    background-color: white;
+    background-color: gray;
   }
   
   .Auth-form-content {
@@ -38,3 +39,10 @@
     margin: 5px;
  
   }
+
+  .Black {
+    background-color: black;
+  }
+
+  
+

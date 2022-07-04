@@ -9,7 +9,7 @@ import './NavBar.css';
 export default function NavBar() { 
   const {loged, setLoged} = useContext(contexto);
     return (
-        <Navbar bg="light" expand="lg">
+        <Navbar bg="dark" variant='dark' expand="lg">
   <Container>
     <Navbar.Brand><Link to='/' className='LogoPrincipal'>Cantilever</Link></Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -19,7 +19,7 @@ export default function NavBar() {
         <NavDropdown title="Facturador" id="basic-nav-dropdown">
           <NavDropdown.Item href="#action/3.1">Emitir</NavDropdown.Item>
           <NavDropdown.Item href="#action/3.2">Clientes</NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.3">Productos</NavDropdown.Item>
+          <NavDropdown.Item><Link to='/productos'>Productos</Link></NavDropdown.Item>
           <NavDropdown.Item href="#action/3.3">Proveedores</NavDropdown.Item>
           <NavDropdown.Item href="#action/3.3">Resumenes</NavDropdown.Item>
           
@@ -51,15 +51,18 @@ export default function NavBar() {
 
     <Navbar.Collapse className="justify-content-end">
       <Navbar.Text>
+        
         <Nav.Link onClick={() => {
           setLoged(false)
           Swal.fire({
-            title: "Cerrando sesion",
-            text: "Puede ingresar de nuevo",
+            title: "Sesion cerrada",
+            position: "top-end",
+            timer: 2000,
             icon: "success",
-            confirmButtonText: "Ok",
+            showConfirmButton: false
           })
-        }}>LogOut</Nav.Link>
+        }}><Link to='/' className='LogoPrincipal'>LogOut</Link></Nav.Link>
+        
       </Navbar.Text>
       <Nav.Link href="#home">Soporte</Nav.Link>
     </Navbar.Collapse>

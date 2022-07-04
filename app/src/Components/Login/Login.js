@@ -31,9 +31,10 @@ export default function Login() {
             setUser(data.mail)
             Swal.fire({
               title: "Bienvenido",
-              text: "Puede ingresar",
+              position: "top-end",
+              timer: 2000,
               icon: "success",
-              confirmButtonText: "Ok",
+              showConfirmButton: false
             })
           }
 
@@ -53,7 +54,7 @@ export default function Login() {
 
 
     return (
-        <>
+        <div className='Black'>
         <div className="Auth-form-container">
       <form className="Auth-form">
         <div className="Auth-form-content">
@@ -77,7 +78,7 @@ export default function Login() {
             />
           </div>
           <div className="d-grid gap-2 mt-3">
-            <button type="button" className="btn btn-dark" onClick={(e) => {
+            <button type="submit" className="btn btn-dark" onClick={(e) => {
               RequetLogin(e)
             }}>
               Ingresar
@@ -91,6 +92,6 @@ export default function Login() {
       </form>
     </div>
   
-        </>
+        </div>
     );
 }
