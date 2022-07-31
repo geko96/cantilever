@@ -61,6 +61,7 @@ export default function NavBar() {
             icon: "success",
             showConfirmButton: false
           })
+          localStorage.clear();
         }}><Link to='/' className='LogoPrincipal'>LogOut</Link></Nav.Link>
         
       </Navbar.Text>
