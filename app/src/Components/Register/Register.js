@@ -130,13 +130,25 @@ export default function Register() {
                         body: JSON.stringify(UserData),
 
                       }).then((res) => {
-                        console.log(res.body)
+                        if (res.status === 400) {
+                          Swal.fire({
+                            title: "Error",
+                            text: "El CUIT ya se encuentra registrado",
+                            icon: "error",
+                            confirmButtonText: "Ok",
+                          })
+                          console.log(res)
+                          
+                        }else{
+                          console.log(res.body)
                         Swal.fire({
                           title: "Registro exitoso",
                           text: "Puede ingresar",
                           icon: "success",
                           confirmButtonText: "Ok",
                         })
+                        }
+                        
                       })
                       
                       

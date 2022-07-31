@@ -21,6 +21,10 @@ function App() {
     cart,
     setCart
   }
+
+  
+
+
   return (
     <>
     <Provider value={contextValue}>

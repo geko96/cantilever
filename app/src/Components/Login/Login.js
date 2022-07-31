@@ -6,18 +6,35 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useContext } from 'react';
 import { contexto } from '../Context/Context';
+import SaveData from '../LocalStorage/SaveData';
+import LoadData from '../LocalStorage/LoadData';
 
 export default function Login() {
+
   const {loged, setLoged, user, setUser} = useContext(contexto);
+  const StorageId = 777;
+
+  const datas = localStorage.getItem(StorageId)
+  if(datas === null){
+    console.log("Not logued")
+  }else{
+    console.log("Logued heredado")
+    setLoged(true);
+    setUser(JSON.parse(localStorage.getItem(StorageId)));
+  }
+
+   
   
     function  RequetLogin (e) {
       e.preventDefault();
-        const user = {
+
+
+      const user = {
             mail: document.getElementById('mail').value,
             password: document.getElementById('password').value
-        }
+      }
 
-       const userType = fetch('http://localhost:8080/api/login', {
+      const userType = fetch('http://localhost:8080/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -26,16 +43,22 @@ export default function Login() {
         }).then(res => res.json())
         .then(data => {
           console.log(data)
-          if(data.mail === user.mail && data.password === user.password){
-            setLoged(true)
-            setUser(data.mail)
+          if(data.cuit){
+            setLoged(true);
+            setUser(data)
+            
             Swal.fire({
-              title: "Bienvenido",
-              position: "top-end",
+              title: 'Bienvenido',
+              position: 'top-end',
+              text: `Hola ${data.cuit}`,
+              icon: 'success',
               timer: 2000,
-              icon: "success",
               showConfirmButton: false
+              
             })
+
+            SaveData(StorageId,data);
+
           }
 
           
