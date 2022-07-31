@@ -50,7 +50,6 @@ export default function Login() {
             Swal.fire({
               title: 'Bienvenido',
               position: 'top-end',
-              text: `Hola ${data.cuit}`,
               icon: 'success',
               timer: 2000,
               showConfirmButton: false
