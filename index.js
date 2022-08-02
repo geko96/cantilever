@@ -1,4 +1,8 @@
+require('dotenv').config();
+const parseArgs = require('minimist');
+const { fork, exec } = require('child_process');
 
+const args = parseArgs(process.argv.slice(2));
 
 const express = require('express');
 const session = require('express-session');
@@ -6,10 +10,13 @@ const app = express();
 const db = require('./Components/Database/db');
 const userModel = require('./Components/Models/User');
 
+
 const jwt = require('jsonwebtoken');
 
 const SECRET = 'secret';
 
+
+console.log(args);
 
 const cors = require('cors');
 
@@ -25,7 +32,7 @@ app.use(session({
 }))
 
 
-const PORT = process.env.PORT || 8080
+const PORT = args.p || 8080
 
 app.use(express.json())
 app.use(express.urlencoded({ extended:true }))
@@ -103,13 +110,36 @@ app.post('/api/checkLogin', (req,res) => {
     return res.send('not logged')
 })
 
+app.get('/info', (req,res) => {
+    let data = {
+        "Argumentos": args,
+        "Sistema operativo": process.platform,
+        "Versión de Node": process.version,
+        "Memoria total reservada": process.memoryUsage().heapTotal,
+        "Path de ejecucion": process.execPath,
+        "Process id": process.pid,
+        "Carpeda del proyecto": __dirname,
+    }
+    res.json(data)
+})
+
+app.get('/api/random', (req,res) => {
+    let resultado = fork('./forks.js')
+    resultado.on('message', (data) => {
+        res.json({'Resultado' : data})
+    })
+})
+
 
 
 
 const server = app.listen(PORT, () => {
     console.log(`Server iniciado en el puerto ${PORT}`)
+    
 })
 
+
+fork('./apiFork.js')
 
 
 
