@@ -1,5 +1,5 @@
 
-let randomNumber = Math.floor(Math.random() * 3e9)
+let randomNumber = Math.floor(Math.random() * 3e8)
 
 let calculo = () => {
     let sum = 0

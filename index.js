@@ -1,6 +1,7 @@
 require('dotenv').config();
 const parseArgs = require('minimist');
 const { fork, exec } = require('child_process');
+const log4js = require('log4js');
 
 const args = parseArgs(process.argv.slice(2));
 
@@ -14,6 +15,27 @@ const userModel = require('./Components/Models/User');
 const jwt = require('jsonwebtoken');
 
 const SECRET = 'secret';
+
+log4js.configure({
+    appenders: {
+        consola: { type: 'console'},
+        warning: { type: 'file', filename: './logs/warn.log'},
+        error: { type: 'file', filename: './logs/error.log'},
+        info: { type: 'file', filename: './logs/info.log'},
+    },
+    categories: {
+        default: { appenders: ['consola', 'warning', 'error'], level: 'debug' },
+        info: { appenders: ['info','consola'], level: 'info' },
+        error: { appenders: ['error'], level: 'error' },
+        warning: { appenders: ['warning'], level: 'warn' },
+    }
+})
+
+const warn = log4js.getLogger('warning');
+const error = log4js.getLogger('error');
+const info = log4js.getLogger('info');
+
+
 
 
 console.log(args);
@@ -39,10 +61,24 @@ app.use(express.urlencoded({ extended:true }))
 
 
 app.get('/', (req,res) => {
+    info.info(JSON.stringify({
+        user: req.session.user,
+        token: req.session.token,
+        "url": req.url,
+        "method": req.method,
+        
+    }));
     return res.send('ok')
 })
 
 app.post('/api/checkuser', (req,res) => {
+    info.info(JSON.stringify({
+        user: req.session.user,
+        token: req.session.token,
+        "url": req.url,
+        "method": req.method,
+        
+    }));
     const { username, password } = req.body
     db.then(db => {
         userModel.findOne({username: username, password: password}, (err,user) => {
@@ -55,6 +91,13 @@ app.post('/api/checkuser', (req,res) => {
 })
 
 app.post('/api/register', (req,res) => {
+    info.info(JSON.stringify({
+        user: req.session.user,
+        token: req.session.token,
+        "url": req.url,
+        "method": req.method,
+        
+    }));
     const { name, password, mail, cuit, } = req.body
     
     const user = {
@@ -77,6 +120,13 @@ app.post('/api/register', (req,res) => {
 })
 
 app.post('/api/login', (req,res) => {
+    info.info(JSON.stringify({
+        user: req.session.user,
+        token: req.session.token,
+        "url": req.url,
+        "method": req.method,
+        
+    }));
     const { mail, password } = req.body
     db.then(db => {
         userModel.findOne({mail: mail, password: password}, (err,user) => {
@@ -105,12 +155,25 @@ app.post('/api/login', (req,res) => {
 })
 
 app.post('/api/checkLogin', (req,res) => {
+    info.info(JSON.stringify({
+        user: req.session.user,
+        token: req.session.token,
+        "url": req.url,
+        "method": req.method,
+        
+    }));
     if(req.session.user) return res.json(req.session.user)
     
     return res.send('not logged')
 })
 
 app.get('/info', (req,res) => {
+    info.info(JSON.stringify({
+        user: req.session.user,
+        token: req.session.token,
+        "url": req.url,
+        "method": req.method,
+    }));
     let data = {
         "Argumentos": args,
         "Sistema operativo": process.platform,
@@ -124,10 +187,31 @@ app.get('/info', (req,res) => {
 })
 
 app.get('/api/random', (req,res) => {
+    info.info(JSON.stringify({
+        user: req.session.user,
+        token: req.session.token,
+        "url": req.url,
+        "method": req.method,
+
+    }));
     let resultado = fork('./forks.js')
     resultado.on('message', (data) => {
         res.json({'Resultado' : data})
     })
+})
+
+
+app.get('/not-found', (req,res) => {
+    info.info(JSON.stringify({
+        user: req.session.user,
+        token: req.session.token,
+        "url": req.url,
+        "method": req.method,
+        
+    }));
+    warn.warn('url Not found')
+    res.status(404).send('Not found')
+
 })
 
 
@@ -136,10 +220,12 @@ app.get('/api/random', (req,res) => {
 const server = app.listen(PORT, () => {
     console.log(`Server iniciado en el puerto ${PORT}`)
     
+}).on('error', err => {
+    error.error(err)
 })
 
 
-fork('./apiFork.js')
+fork('./apiFork.js', {env: {PORT: PORT+1}})
 
 
 
